@@ -17,10 +17,28 @@ public class CollisionHandler : MonoBehaviour
 
     Rigidbody rigidBody;
     AudioSource audioSource;
+    bool CollisionIsDisabled = false;
 
     private void Start() {
         rigidBody = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
+    }
+
+    private void Update() {
+        ProcessCheat();        
+    }
+    
+    void ProcessCheat()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            CompleteLevel();
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            CollisionIsDisabled = !CollisionIsDisabled;
+        }
     }
 
     private void OnCollisionEnter(Collision other)
@@ -64,6 +82,11 @@ public class CollisionHandler : MonoBehaviour
 
     void RocketCrashed()
     {
+        if (CollisionIsDisabled)
+        {
+            return;
+        }
+        
         audioSource.Stop();
         audioSource.PlayOneShot(explosionAudio);
         explosionParticle.Play();

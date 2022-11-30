@@ -40,16 +40,12 @@ public class Movement : MonoBehaviour
 
     void ProcessRotation()
     {
-        if (Input.GetKey(KeyCode.A))
-        {
-            Rotate(Vector3.forward);
-            rightBooster.PlayWhenNotPlaying();
-        }
-        else
-        {
-            rightBooster.StopWhenPlaying();
-        }
+        HandleLeftBooster();
+        HandleRightBooter();
+    }
 
+    void HandleLeftBooster()
+    {
         if (Input.GetKey(KeyCode.D))
         {
             Rotate(Vector3.back);
@@ -58,6 +54,19 @@ public class Movement : MonoBehaviour
         else
         {
             leftBooster.StopWhenPlaying();
+        }
+    }
+
+    void HandleRightBooter()
+    {
+        if (Input.GetKey(KeyCode.A))
+        {
+            Rotate(Vector3.forward);
+            rightBooster.PlayWhenNotPlaying();
+        }
+        else
+        {
+            rightBooster.StopWhenPlaying();
         }
     }
 
@@ -73,9 +82,7 @@ public class Movement : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            var power = Time.deltaTime * thrustPower * Vector3.up;
-            rigidBody.AddRelativeForce(power);
-            PlayThrust();
+            StartThrust();
         }
         else
         {
@@ -83,8 +90,11 @@ public class Movement : MonoBehaviour
         }
     }
 
-    void PlayThrust()
+    void StartThrust()
     {
+        var power = Time.deltaTime * thrustPower * Vector3.up;
+        rigidBody.AddRelativeForce(power);
+
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(thrustAudio);
